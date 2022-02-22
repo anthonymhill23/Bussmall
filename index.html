@@ -1,25 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <link href="https://fonts.googleapis.com/css?family=Saira:300,700" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
-  <title>BusMall Market Research</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>BusMall</title>
 </head>
-<header>
-  <h1>BusMall Product Research</h1>
-</header>
-<body>
-  <section id="productsSection">
-  <p>Please click the product you find most appealing.</p>
-  <img id="productOne" src="" alt="">
-  <img id="productTwo" src="" alt="">
-  <img id="productThree" src="" alt="">
-</section>
-  <canvas id="productStats" width="960px" height="500px"></canvas>
+
+<body class='big-grid'>
+    <div class='data-column'>
+        <h2></h2>
+        <ul id='append-list'>
+            
+        </ul>
+    </div>
+    <main class='grid-container-main'>
+        <div class='grid-item grid-item-1'>
+            <h1>Welcome to  BusMall!!</h1>
+            <p>Please cast your votes below,<br />of which image you like the MOST..</p>
+        </div>
+        <div id='image-options'>
+            <div class='flex-item'>
+                <img id='first-image' src="" alt="">
+            </div>
+
+            <div class='flex-item'>
+                <img id='second-image' src="" alt="">
+            </div>
+
+            <div class='flex-item'>
+                <img id='third-image' src="" alt="">
+            </div>
+        </div>
+        <div id='append-here' class='grid-item grid-item-5'>
+            <!--button is generated here-->
+        </div>
+        <canvas id='results-chart' width='400' height="220"></canvas>
+    </main>
 </body>
-<script src="js/app.js"></script>
-<footer>
-</footer>
+
 </html>

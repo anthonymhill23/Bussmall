@@ -1,215 +1,232 @@
-'use strict';
-console.log('js file is connected');
+'use strict'
+const allImageOptions = document.getElementById('image-options');
 
-// GLOBAL VARIABLES //
-let imageElements = document.getElementsByTagName('img');
-console.log('imageElements ', imageElements);
+const glob = {
+    count: 0,
+    leftImage: undefined,
+    centerImage: undefined,
+    rightImage: undefined,
+    usedImagesArray: []
+}
 
-let productIndex1 = 0;
-let productIndex2 = 1;
-let productIndex3 = 2;
-let rounds = 25;
-let allProducts = [];
-
-// CONSTRUCTOR FUNCTION //
-function Product(name, imageURL, timesClicked, timesShown) {
-  this.name = name;
-  this.imageURL = imageURL;
-
-  if (timesClicked) {
-    this.timesClicked = timesClicked;
-  } else {
-    this.timesClicked = 0;
-  }
-  if (timesShown) {
-    this.timesShown = timesShown;
-  } else {
+function Product(name, url) {
+    this.name = name;
+    this.url = url;
     this.timesShown = 0;
-  }
-  allProducts.push(this);
-}
+    this.timesClicked = 0;
 
-console.log(allProducts);
-
-function getProductArray(nameOfThePropertyIWant) {
-  let answer = [];
-  for (let i = 0; i < allProducts.length; i++) {
-    answer[i] = allProducts[i][nameOfThePropertyIWant];
-  }
-  console.log(answer);
-  return answer;
-}
-
-let savedProductString = localStorage.getItem('savedProduct');
-
-if (savedProductString) {
-  let arrayOfNotProduct = JSON.parse(savedProductString);
-  console.log('if condition what is our type ', arrayOfNotProduct);
-
-  for (let j = 0; j < arrayOfNotProduct.length; j++) {
-    new Product(
-      arrayOfNotProduct[j].name,
-      arrayOfNotProduct[j].imageURL,
-      arrayOfNotProduct[j].timesClicked,
-      arrayOfNotProduct[j].timesShown
-    );
-  }
-} else {
-
-  new Product('Bag', 'images/bag.jpg');
-  new Product('Banana', 'images/banana.jpg');
-  new Product('Bathroom', 'images/bathroom.jpg');
-  new Product('Boots', 'images/boots.jpg');
-  new Product('Breakfast', 'images/breakfast.jpg');
-  new Product('Bubblegum', 'images/bubblegum.jpg');
-  new Product('Chair', 'images/chair.jpg');
-  new Product('Cthulhu', 'images/cthulhu.jpg');
-  new Product('Dog-Dug', 'images/dog-duck.jpg');
-  new Product('Dragon', 'images/dragon.jpg');
-  new Product('Pen', 'images/pen.jpg');
-  new Product('Pet-sweep', 'images/pet-sweep.jpg');
-  new Product('Scissors', 'images/scissors.jpg');
-  new Product('Shark', 'images/shark.jpg');
-  new Product('Sweep', 'images/sweep.png');
-  new Product('Tauntaun', 'images/tauntaun.jpg');
-  new Product('Unicorn', 'images/unicorn.jpg');
-  new Product('Water-can', 'images/water-can.jpg');
-  new Product('Wine-Glass', 'images/wine-glass.jpg');
-}
-
-allProducts[0].timesShown = 1;
-allProducts[1].timesShown = 1;
-
-let totalClicks = 0;
-
-function imageWasClicked(event) {
-  totalClicks++;
-  console.log('is this click working?');
-
-
-  if (event.srcElement.id === '1') {
-    allProducts[productIndex1].timesClicked++;
-  } else if (event.srcElement.id === '2') {
-    allProducts[productIndex2].timesClicked++;
-  } else if (event.srcElement.id === '3') {
-    allProducts[productIndex3].timesClicked++;
-  }
-
-  let nextProductIndex1 = Math.floor(Math.random() * allProducts.length);
-  let nextProductIndex2 = Math.floor(Math.random() * allProducts.length);
-  let nextProductIndex3 = Math.floor(Math.random() * allProducts.length);
-
-  while ((nextProductIndex1 === productIndex1) ||
-    (nextProductIndex1 === productIndex2) ||
-    (nextProductIndex1 === productIndex3) ||
-    (nextProductIndex1 === nextProductIndex2) ||
-    (nextProductIndex1 === nextProductIndex3)) {
-    nextProductIndex1 = Math.floor(Math.random() * allProducts.length);
-  }
-  while ((nextProductIndex2 === productIndex1) ||
-    (nextProductIndex2 === productIndex2) ||
-    (nextProductIndex2 === productIndex3) ||
-    (nextProductIndex2 === nextProductIndex1) ||
-    (nextProductIndex2 === nextProductIndex3)) {
-    nextProductIndex2 = Math.floor(Math.random() * allProducts.length);
-  }
-  while ((nextProductIndex3 === productIndex1) ||
-    (nextProductIndex3 === productIndex2) ||
-    (nextProductIndex3 === productIndex3) ||
-    (nextProductIndex3 === nextProductIndex2) ||
-    (nextProductIndex3 === nextProductIndex1)) {
-    nextProductIndex3 = Math.floor(Math.random() * allProducts.length);
-  }
-
-  productIndex1 = nextProductIndex1;
-  productIndex2 = nextProductIndex2;
-  productIndex3 = nextProductIndex3;
-
-  imageElements[0].src = allProducts[productIndex1].imageURL;
-  allProducts[productIndex1].timesShown++;
-
-  imageElements[1].src = allProducts[productIndex2].imageURL;
-  allProducts[productIndex2].timesShown++;
-
-  imageElements[2].src = allProducts[productIndex3].imageURL;
-  allProducts[productIndex3].timesShown++;
-
-  if (totalClicks >= rounds) {
-
-    localStorage.setItem('savedProduct', JSON.stringify(allProducts));
-
-    let footerElement = document.getElementById('footer');
-
-    if (footerElement.firstChildElement) {
-      footerElement.firstChildElement.remove();
-    }
-
-    let asideUL = document.getElementById('voteResults');
-
-    for (let i = 0; i < allProducts.length; i++) {
-      let voteResultsListItem = document.createElement('li');
-      voteResultsListItem.textContent = `${allProducts[i].name} was clicked on ${allProducts[i].timesClicked} times and was shown ${allProducts[i].timesShown} times `;
-      asideUL.appendChild(voteResultsListItem);
-
-      let percentageListItem = document.createElement('li');
-      let math;
-      if (allProducts[i].timesClicked === 0) {
-        math = `zero click and shown ${allProducts[i].timesShown} times. Must be a bad product`;
-      } else {
-        math = Math.round(((allProducts[i]['timesClicked'] / allProducts[i]['timesShown']).toFixed(2) * 100)) + '%';
-      }
-      percentageListItem.textContent = `${allProducts[i].name} percentage of times clicked on vs. times shown is ${math}`;
-      asideUL.appendChild(percentageListItem);
-    }
-
-    for (let i = 0; i < imageElements.length; i++) {
-      imageElements[i].removeEventListener('click', imageWasClicked);
-      console.log('is this thing working?');
-    }
-    runMyChartNow();
-  }
-
-}
-for (let i = 0; i < imageElements.length; i++) {
-  imageElements[i].addEventListener('click', imageWasClicked);
+    Product.productArray.push(this);
 }
 
 
-function runMyChartNow() {
-  let ctx = document.getElementById('myChart').getContext('2d');
+Product.productArray = [];
 
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: getProductArray('name'),
-      datasets: [{
-        label: '# of Votes',
-        data: getProductArray('timesClicked'),
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)'
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)'
-        ],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
+let imageCreator = function () { // renders images, specifically if there are no images stored in local storage
+    new Product('bag', 'assets/bag.jpg');
+    new Product('banana', 'assets/banana.jpg');
+    new Product('bathroom', 'assets/bathroom.jpg');
+    new Product('boots', 'assets/boots.jpg');
+    new Product('breakfast', 'assets/breakfast.jpg');
+    new Product('bubblegum', 'assets/bubblegum.jpg');
+    new Product('chair', 'assets/chair.jpg');
+    new Product('cthulhu', 'assets/cthulhu.jpg');
+    new Product('dog-duck', 'assets/dog-duck.jpg');
+    new Product('dragon', 'assets/dragon.jpg');
+    new Product('pen', 'assets/pen.jpg');
+    new Product('pet-sweep', 'assets/pet-sweep.jpg');
+    new Product('scissors', 'assets/scissors.jpg');
+    new Product('shark', 'assets/shark.jpg');
+    new Product('sweep', 'assets/sweep.jpg');
+    new Product('tauntaun', 'assets/tauntaun.jpg');
+    new Product('unicorn', 'assets/unicorn.jpg');
+    new Product('water-can', 'assets/water-can.jpg');
+    new Product('wine-glass', 'assets/wine-glass.jpg');
+}
+
+let randomizer = function () { // picks a random image from NewImage.imageArray
+    let imageGenerated = Product.productArray[Math.floor(Math.random() * (Product.productArray.length))]
+    return imageGenerated;
+}
+
+let imageRenderer = function () { // renders 3 images from NewImage.imageArray, that are generated with randomizer and checked with isNewChecker
+    let tempArrayImages = [];
+    let numGeneratedImages = 3;
+    const firstImageTag = document.getElementById('first-image');
+    const secondImageTag = document.getElementById('second-image');
+    const thirdImageTag = document.getElementById('third-image');
+
+    for (let i = 0; i < numGeneratedImages; i += 1) {
+        if (i === 0) {
+            glob.leftImage = imageIsNewChecker(glob.leftImage);
+            firstImageTag.src = glob.leftImage.url;
+            tempArrayImages[i] = glob.leftImage;
+            glob.leftImage.timesShown++;
+        } else if (i === 1) {
+            glob.centerImage = imageIsNewChecker(glob.centerImage, glob.leftImage);
+            secondImageTag.src = glob.centerImage.url;
+            tempArrayImages[i] = glob.centerImage;
+            glob.centerImage.timesShown++;
+        } else if (i === 2) {
+            glob.rightImage = imageIsNewChecker(glob.rightImage, glob.leftImage, glob.centerImage);
+            thirdImageTag.src = glob.rightImage.url;
+            tempArrayImages[i] = glob.rightImage;
+            glob.rightImage.timesShown++;
         }
-      }
     }
-  });
+    glob.usedImagesArray = tempArrayImages;
 }
+
+let handleClick = function (event) { // this handles the clicks of both the 3 images and tallying votes AND the click of the submission, which renders column, chart, and stores data locally
+    let num = 25;
+    const id = event.target.id;
+
+    if (glob.count < num) {
+        if (id === 'first-image') {
+            glob.leftImage.timesClicked += 1;
+        } else if (id === 'second-image') {
+            glob.centerImage.timesClicked += 1;
+        } else if (id === 'third-image') {
+            glob.rightImage.timesClicked += 1;
+        } else {
+            alert("please click an image option, you've been docked a vote");
+        }
+        glob.count += 1;
+    }
+
+    if (glob.count === num) {
+        allImageOptions.removeEventListener('click', handleClick);
+
+        const appender = document.getElementById('append-here')
+        const addButton = document.createElement('button');
+        addButton.setAttribute('id', 'button');
+        addButton.textContent = 'Submit Results';
+        appender.appendChild(addButton);
+        const sumbitButton = document.getElementById('button');
+        sumbitButton.addEventListener('click', submitButtonHandle);
+        return;
+    }
+    imageRenderer();
+}
+
+let renderTotalsColumn = function () { // takes totals stored in each image object and renders them to left column on screen
+    let index = 0;
+
+    Product.productArray.forEach(element => {
+        let list = document.getElementById('append-list');
+        let listItem = document.createElement('li');
+        listItem.setAttribute('id', `list-item${index}`);
+        list.appendChild(listItem);
+        let tempName = element.name;
+        let timesClicked = element.timesClicked;
+        let timesShown = element.timesShown;
+        listItem.textContent = `- ${tempName} was clicked ${timesClicked}/${timesShown} times shown`
+        index += 1;
+    })
+}
+
+let imageIsNewChecker = function (valueToCheck, cantBeThis, cantBeThisEither) { // checks image object to ensure it is 1) not one that was previously shown and 2) not one of the other images currently rendered
+    valueToCheck = randomizer();
+
+    while (glob.usedImagesArray.includes(valueToCheck) || valueToCheck === cantBeThis || valueToCheck === cantBeThisEither) {
+        valueToCheck = randomizer();
+    }
+    return valueToCheck;
+}
+
+let submitButtonHandle = function () { // simply packages all functions for the sumbit button into one event for the sumbit button eventHandler
+    renderTotalsColumn();
+    renderChart();
+    storeData();
+    const submitButton = document.getElementById('button');
+    submitButton.removeEventListener('click', submitButtonHandle);
+}
+
+let renderChart = function () {
+
+    const imageNamesArray = [];
+    const imageVotesArray = [];
+    const ImageShownArray = [];
+
+    for (let i = 0; i < Product.productArray.length; i += 1) {
+        const image = Product.productArray[i];
+
+        const singleImageName = image.name;
+        imageNamesArray.push(singleImageName);
+
+        const singleImageVotes = image.timesClicked;
+        imageVotesArray.push(singleImageVotes);
+
+        const singleImageShown = image.timesShown;
+        ImageShownArray.push(singleImageShown);
+    }
+
+    const ctx = document.getElementById('results-chart').getContext('2d');
+    const imageChart = new Chart(ctx, {
+
+        type: 'horizontalBar',
+
+
+        data: {
+            labels: imageNamesArray,
+            datasets: [{
+                label: 'Image Votes',
+                borderColor: '#F2C078',
+                backgroundColor: '#042A2B',
+                hoverBackgroundColor: '#F2C078',
+                data: imageVotesArray
+            }, {
+                label: 'Times Image Was Shown',
+                borderColor: '#F2C078',
+                backgroundColor: '#EAFFD1',
+                hoverBackgroundColor: '#3A2E39',
+                data: ImageShownArray
+            }]
+        },
+
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    },
+                    stacked: true
+                }],
+                xAxes: [{
+                }]
+            }
+        }
+    })
+}
+
+let storeData = function () {
+    const imageJSON = JSON.stringify(Product.productArray);
+    localStorage.setItem('images', imageJSON);
+}
+
+let imageRecreater = function (imageJSON) { // renders images, specifically based off the data stored locally
+
+    const rawImages = JSON.parse(imageJSON);
+
+    rawImages.forEach(element => {
+        let singleObject = new Product(element.name, element.url);
+        singleObject.timesClicked = element.timesClicked;
+        singleObject.timesShown = element.timesShown;
+    })
+}
+
+let imageProduction = function () {
+
+    const imageJSON = localStorage.getItem('images');
+    if (imageJSON) {
+        imageRecreater(imageJSON);
+    } else {
+        imageCreator();
+    }
+}
+imageProduction();
+
+imageRenderer();
+allImageOptions.addEventListener('click', handleClick);
+
+
+
