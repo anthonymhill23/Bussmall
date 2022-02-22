@@ -1,135 +1,232 @@
-'use strict';
-console.log('js file is connected');
+'use strict'
+const allImageOptions = document.getElementById('image-options');
 
-// GLOBAL VARIABLES //
-const productImageSectionTag = document.getElementById('all_products');
-const leftProductImageTag = document.getElementById('left_product_img');
-const middleProductImageTag = document.getElementById('middle_product_img');
-const rightProductImageTag = document.getElementById('right_product_img');
+const glob = {
+    count: 0,
+    leftImage: undefined,
+    centerImage: undefined,
+    rightImage: undefined,
+    usedImagesArray: []
+}
 
-let totalClicks = 0;
+function Product(name, url) {
+    this.name = name;
+    this.url = url;
+    this.timesShown = 0;
+    this.timesClicked = 0;
 
-// VARIABLES TO STORE THE PRODUCTS ALREADY ON THE PAGE //
-let leftProductOnPage = null;
-let middleProductOnPage = null;
-let rightProductOnPage = null;
+    Product.productArray.push(this);
+}
 
-// CONSTRUCTOR FUNCTION //
-const ProductPicture = function(name, imageSrc) {
-  this.name = name;
-  this.url = imageSrc;
-  // COUNT OUR PRODUCT VOTES //
-  this.click = 0;
-  this.timesShown = 0;
-  // PUSH OBJECT INTO OUR ARRAY TO STORE THE PRODUCT OBJECT //
-  ProductPicture.allImages.push(this);
-};
 
-ProductPicture.allImages = [];
-console.log(ProductPicture.allImages);
-// PREVENT LAST PRODUCTS FROM BEING PICKED //
+Product.productArray = [];
 
-const renderNewProducts = function(leftIndex, middleIndex, rightIndex) {
-  // console.log('create the image src="X" for left, middle, and right images', leftIndex);
-  // console.log('ProductPicture.allImages[leftIndex].url;', ProductPicture.allImages[leftIndex].url);
-  leftProductImageTag.src = ProductPicture.allImages[leftIndex].url;
-  middleProductImageTag.src = ProductPicture.allImages[middleIndex].url;
-  rightProductImageTag.src = ProductPicture.allImages[rightIndex].url;
-};
+let imageCreator = function () { // renders images, specifically if there are no images stored in local storage
+    new Product('bag', 'assets/bag.jpg');
+    new Product('banana', 'assets/banana.jpg');
+    new Product('bathroom', 'assets/bathroom.jpg');
+    new Product('boots', 'assets/boots.jpg');
+    new Product('breakfast', 'assets/breakfast.jpg');
+    new Product('bubblegum', 'assets/bubblegum.jpg');
+    new Product('chair', 'assets/chair.jpg');
+    new Product('cthulhu', 'assets/cthulhu.jpg');
+    new Product('dog-duck', 'assets/dog-duck.jpg');
+    new Product('dragon', 'assets/dragon.jpg');
+    new Product('pen', 'assets/pen.jpg');
+    new Product('pet-sweep', 'assets/pet-sweep.jpg');
+    new Product('scissors', 'assets/scissors.jpg');
+    new Product('shark', 'assets/shark.jpg');
+    new Product('sweep', 'assets/sweep.jpg');
+    new Product('tauntaun', 'assets/tauntaun.jpg');
+    new Product('unicorn', 'assets/unicorn.jpg');
+    new Product('water-can', 'assets/water-can.jpg');
+    new Product('wine-glass', 'assets/wine-glass.jpg');
+}
 
-const pickNewProducts = function () {
-  const leftIndex = Math.floor(Math.random() * ProductPicture.allImages.length);
-  console.log('leftIndex', leftIndex);
-  let rightIndex;
-  let middleIndex;
-  do {
-    middleIndex = Math.floor(Math.random() * ProductPicture.allImages.length);
-    console.log('middleIndex', middleIndex);
-    rightIndex = Math.floor(Math.random() * ProductPicture.allImages.length);
-    console.log('rightIndex', rightIndex);
+let randomizer = function () { // picks a random image from NewImage.imageArray
+    let imageGenerated = Product.productArray[Math.floor(Math.random() * (Product.productArray.length))]
+    return imageGenerated;
+}
 
-  } while (leftIndex === rightIndex || rightIndex === middleIndex || leftIndex === middleIndex);
+let imageRenderer = function () { // renders 3 images from NewImage.imageArray, that are generated with randomizer and checked with isNewChecker
+    let tempArrayImages = [];
+    let numGeneratedImages = 3;
+    const firstImageTag = document.getElementById('first-image');
+    const secondImageTag = document.getElementById('second-image');
+    const thirdImageTag = document.getElementById('third-image');
 
-  console.log(ProductPicture.allImages[leftIndex].name, ProductPicture.allImages[middleIndex].name, ProductPicture.allImages[rightIndex].name);
-
-  leftProductOnPage = ProductPicture.allImages[leftIndex];
-  middleProductOnPage = ProductPicture.allImages[middleIndex];
-  rightProductOnPage = ProductPicture.allImages[rightIndex];
-  //function call to give the render new image src's
-  renderNewProducts(leftIndex, middleIndex, rightIndex);
-};
-
-const handleClickonProduct = function (event) {
-  // console.log('Lets handle the click now');
-  // console.log('left product on the page. ', leftProductOnPage);
-
-  if (totalClicks < 5) {
-
-    const thingWeClickOn = event.target;
-
-    // console.log('event target', event.target);
-    const id = thingWeClickOn.id;
-    // console.log('thingWeClickOn', thingWeClickOn);
-    // console.log('this is the id', id);
-
-    if (id === 'left_product_img') {
-      console.log('left product on the page.', leftProductOnPage);
-      leftProductOnPage.clicks++;}
-      else if (id === 'middle_product_img') {
-        console.log('middle product on the page.', middleProductOnPage);
-        middleProductOnPage.clicks++;
-      }
-      else if (id === 'right_product_img') {
-        console.log('right prodcut on the page.', rightProductOnPage);
-        rightProductOnPage.clicks++;
-      }
-      console.log('left product on the page. ', leftProductOnPage);
-      leftProductOnPage.timesShown++;
-      middleProductOnPage.timesShown++;
-      rightProductOnPage.timesShown++;
-      pickNewProducts();
+    for (let i = 0; i < numGeneratedImages; i += 1) {
+        if (i === 0) {
+            glob.leftImage = imageIsNewChecker(glob.leftImage);
+            firstImageTag.src = glob.leftImage.url;
+            tempArrayImages[i] = glob.leftImage;
+            glob.leftImage.timesShown++;
+        } else if (i === 1) {
+            glob.centerImage = imageIsNewChecker(glob.centerImage, glob.leftImage);
+            secondImageTag.src = glob.centerImage.url;
+            tempArrayImages[i] = glob.centerImage;
+            glob.centerImage.timesShown++;
+        } else if (i === 2) {
+            glob.rightImage = imageIsNewChecker(glob.rightImage, glob.leftImage, glob.centerImage);
+            thirdImageTag.src = glob.rightImage.url;
+            tempArrayImages[i] = glob.rightImage;
+            glob.rightImage.timesShown++;
+        }
     }
-    // console.log('is this running ', event.target.id);
-  }
+    glob.usedImagesArray = tempArrayImages;
+}
 
-  totalClicks++;
-  // if (totalClicks === 5) {
-  //   productImageSectionTag.removeEventListener('click', handleClickonProduct);
-  //   // console.log('the vote has ended. and remove listener works. ');
-  // }
+let handleClick = function (event) { // this handles the clicks of both the 3 images and tallying votes AND the click of the submission, which renders column, chart, and stores data locally
+    let num = 25;
+    const id = event.target.id;
+
+    if (glob.count < num) {
+        if (id === 'first-image') {
+            glob.leftImage.timesClicked += 1;
+        } else if (id === 'second-image') {
+            glob.centerImage.timesClicked += 1;
+        } else if (id === 'third-image') {
+            glob.rightImage.timesClicked += 1;
+        } else {
+            alert("please click an image option, you've been docked a vote");
+        }
+        glob.count += 1;
+    }
+
+    if (glob.count === num) {
+        allImageOptions.removeEventListener('click', handleClick);
+
+        const appender = document.getElementById('append-here')
+        const addButton = document.createElement('button');
+        addButton.setAttribute('id', 'button');
+        addButton.textContent = 'Submit Results';
+        appender.appendChild(addButton);
+        const sumbitButton = document.getElementById('button');
+        sumbitButton.addEventListener('click', submitButtonHandle);
+        return;
+    }
+    imageRenderer();
+}
+
+let renderTotalsColumn = function () { // takes totals stored in each image object and renders them to left column on screen
+    let index = 0;
+
+    Product.productArray.forEach(element => {
+        let list = document.getElementById('append-list');
+        let listItem = document.createElement('li');
+        listItem.setAttribute('id', `list-item${index}`);
+        list.appendChild(listItem);
+        let tempName = element.name;
+        let timesClicked = element.timesClicked;
+        let timesShown = element.timesShown;
+        listItem.textContent = `- ${tempName} was clicked ${timesClicked}/${timesShown} times shown`
+        index += 1;
+    })
+}
+
+let imageIsNewChecker = function (valueToCheck, cantBeThis, cantBeThisEither) { // checks image object to ensure it is 1) not one that was previously shown and 2) not one of the other images currently rendered
+    valueToCheck = randomizer();
+
+    while (glob.usedImagesArray.includes(valueToCheck) || valueToCheck === cantBeThis || valueToCheck === cantBeThisEither) {
+        valueToCheck = randomizer();
+    }
+    return valueToCheck;
+}
+
+let submitButtonHandle = function () { // simply packages all functions for the sumbit button into one event for the sumbit button eventHandler
+    renderTotalsColumn();
+    renderChart();
+    storeData();
+    const submitButton = document.getElementById('button');
+    submitButton.removeEventListener('click', submitButtonHandle);
+}
+
+let renderChart = function () {
+
+    const imageNamesArray = [];
+    const imageVotesArray = [];
+    const ImageShownArray = [];
+
+    for (let i = 0; i < Product.productArray.length; i += 1) {
+        const image = Product.productArray[i];
+
+        const singleImageName = image.name;
+        imageNamesArray.push(singleImageName);
+
+        const singleImageVotes = image.timesClicked;
+        imageVotesArray.push(singleImageVotes);
+
+        const singleImageShown = image.timesShown;
+        ImageShownArray.push(singleImageShown);
+    }
+
+    const ctx = document.getElementById('results-chart').getContext('2d');
+    const imageChart = new Chart(ctx, {
+
+        type: 'horizontalBar',
+
+
+        data: {
+            labels: imageNamesArray,
+            datasets: [{
+                label: 'Image Votes',
+                borderColor: '#F2C078',
+                backgroundColor: '#042A2B',
+                hoverBackgroundColor: '#F2C078',
+                data: imageVotesArray
+            }, {
+                label: 'Times Image Was Shown',
+                borderColor: '#F2C078',
+                backgroundColor: '#EAFFD1',
+                hoverBackgroundColor: '#3A2E39',
+                data: ImageShownArray
+            }]
+        },
+
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    },
+                    stacked: true
+                }],
+                xAxes: [{
+                }]
+            }
+        }
+    })
+}
+
+let storeData = function () {
+    const imageJSON = JSON.stringify(Product.productArray);
+    localStorage.setItem('images', imageJSON);
+}
+
+let imageRecreater = function (imageJSON) { // renders images, specifically based off the data stored locally
+
+    const rawImages = JSON.parse(imageJSON);
+
+    rawImages.forEach(element => {
+        let singleObject = new Product(element.name, element.url);
+        singleObject.timesClicked = element.timesClicked;
+        singleObject.timesShown = element.timesShown;
+    })
+}
+
+let imageProduction = function () {
+
+    const imageJSON = localStorage.getItem('images');
+    if (imageJSON) {
+        imageRecreater(imageJSON);
+    } else {
+        imageCreator();
+    }
+}
+imageProduction();
+
+imageRenderer();
+allImageOptions.addEventListener('click', handleClick);
 
 
 
-productImageSectionTag.addEventListener('click', handleClickonProduct);
-
-new ProductPicture('Bag', 'assets/bag.jpg');
-new ProductPicture('Banana', 'assets/banana.jpg');
-new ProductPicture('Bathroom', 'assets/bathroom.jpg');
-new ProductPicture('Boots', 'assets/boots.jpg');
-new ProductPicture('Breakfast', 'assets/breakfast.jpg');
-new ProductPicture('Bubblegum', 'assets/bubblegum.jpg');
-new ProductPicture('Chair', 'assets/chair.jpg');
-new ProductPicture('Cthulhu', 'assets/cthulhu.jpg');
-new ProductPicture('Dog-Dug', 'assets/dog-duck.jpg');
-new ProductPicture('Dragon', 'assets/dragon.jpg');
-new ProductPicture('Pen', 'assets/pen.jpg');
-new ProductPicture('Pet-sweep', 'assets/pet-sweep.jpg');
-new ProductPicture('Scissors', 'assets/scissors.jpg');
-new ProductPicture('Shark', 'assets/shark.jpg');
-new ProductPicture('Sweep', 'assets/sweep.jpg');
-new ProductPicture('Tauntaun', 'assets/tauntaun.jpg');
-new ProductPicture('Unicorn', 'assets/unicorn.jpg');
-new ProductPicture('Water-can', 'assets/water-can.jpg');
-new ProductPicture('Wine-Glass', 'assets/wine-glass.jpg');
-
-leftProductOnPage = ProductPicture.allimages;
-middleProductOnPage = ProductPicture.allImages;
-rightProductOnPage = ProductPicture.allImages;
-
-pickNewProducts();
-
-let btn =  document.createElement("button");
-
-btn.innerHTML = "click for results"
-
-document.body.appendChild(btn);
