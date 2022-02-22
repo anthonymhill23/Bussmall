@@ -1,67 +1,60 @@
-* {
+
+{
   box-sizing: border-box;
 }
 
 body {
-  width: 1200px;
-  background-color: rgb(188, 240, 255);
+  width: 1000px;
+  background-color: rgb(196, 236, 247);
   margin: 0 auto;
 }
 
 header {
   margin-top: 50px;
-  margin-bottom: 100px;
-  border: solid 10px white;
-  background-color: rgb(255, 139, 245);
 }
 
 h1 { 
-  font-size: 100px;
-  text-align: center;
-  font-family: 'Permanent Marker', cursive;
+  display: inline-block;
+  font-size: 80px;
+  position: relative;
+  bottom: 80px;
+  padding: 10px;
+  font-family: 'Notable', sans-serif;
 }
 
 h2 {
   text-align: center;
   margin-top: 25px;
-  font-size: 25px;
-  font-family: 'Roboto', sans-serif;
-}
-
-aside {
-  width: 700px;
-  margin-right: auto;
-  margin-left: auto;
-  margin-top: 50px;
-  border: 5px solid white;
-  font-family: 'Roboto', sans-serif;
-  text-align: center;
-  background-color: rgb(255, 139, 245);
-}
-
-#asideid {
-  margin-bottom: 30px;
-}
-
-footer {
-  text-align: center;
-  margin-top: 50px;
   font-size: 23px;
 }
 
-img {
-  height: 200px;
-  width: 200px;
+div {
+  display: inline;
+  padding: 10px;
+}
+
+/* ////IMAGES//// */
+
+#busimage {
+  width: 215px;
+  height: auto;
+}
+
+#left_product_img {
+  height: 300px;
+  width: 300px;
   margin-top: 40px;
   border: 2px solid black;
-  margin-right: 20px; 
-  transition: all .05s ease-in-out;
 }
 
-img:hover {
-  transform: scale(1.1);
+#middle_product_img {
+  height: 300px;
+  width: 300px;
+  border: 2px solid black;
 }
 
-section {
-  text-align: center;
+#right_product_img {
+  height: 300px;
+  width: 300px;
+  border: 2px solid black;
 }
