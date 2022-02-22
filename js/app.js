@@ -2,13 +2,6 @@
 console.log('js file is connected');
 
 // GLOBAL VARIABLES //
-let imageElements = document.getElementsByTagName('img');
-console.log('assets ', imageElements);
-
-'use strict';
-console.log('js file is connected');
-
-// GLOBAL VARIABLES //
 const productImageSectionTag = document.getElementById('all_products');
 const leftProductImageTag = document.getElementById('left_product_img');
 const middleProductImageTag = document.getElementById('middle_product_img');
@@ -81,12 +74,12 @@ const handleClickonProduct = function (event) {
 
     if (id === 'left_product_img') {
       console.log('left product on the page.', leftProductOnPage);
-      leftProductOnPage.clicks++;
-      if (id === 'middle_product_img') {
+      leftProductOnPage.clicks++;}
+      else if (id === 'middle_product_img') {
         console.log('middle product on the page.', middleProductOnPage);
         middleProductOnPage.clicks++;
       }
-      if (id === 'right_product_img') {
+      else if (id === 'right_product_img') {
         console.log('right prodcut on the page.', rightProductOnPage);
         rightProductOnPage.clicks++;
       }
@@ -105,7 +98,7 @@ const handleClickonProduct = function (event) {
   //   // console.log('the vote has ended. and remove listener works. ');
   // }
 
-};
+
 
 productImageSectionTag.addEventListener('click', handleClickonProduct);
 
@@ -135,3 +128,8 @@ rightProductOnPage = ProductPicture.allImages;
 
 pickNewProducts();
 
+let btn =  document.createElement("button");
+
+btn.innerHTML = "click for results"
+
+document.body.appendChild(btn);
