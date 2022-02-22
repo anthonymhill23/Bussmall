@@ -21,7 +21,9 @@ function Product(name, url) {
 
 Product.productArray = [];
 
-let imageCreator = function () { // renders images, specifically if there are no images stored in local storage
+// renders images, specifically if there are no images stored in local storage
+
+let imageCreator = function () { 
     new Product('bag', 'assets/bag.jpg');
     new Product('banana', 'assets/banana.jpg');
     new Product('bathroom', 'assets/bathroom.jpg');
@@ -43,12 +45,16 @@ let imageCreator = function () { // renders images, specifically if there are no
     new Product('wine-glass', 'assets/wine-glass.jpg');
 }
 
-let randomizer = function () { // picks a random image from NewImage.imageArray
+ // picks a random image from NewImage.imageArray
+
+let randomizer = function () {
     let imageGenerated = Product.productArray[Math.floor(Math.random() * (Product.productArray.length))]
     return imageGenerated;
 }
 
-let imageRenderer = function () { // renders 3 images from NewImage.imageArray, that are generated with randomizer and checked with isNewChecker
+// renders 3 images from NewImage.imageArray, that are generated with randomizer and checked with isNewChecker
+
+let imageRenderer = function () { 
     let tempArrayImages = [];
     let numGeneratedImages = 3;
     const firstImageTag = document.getElementById('first-image');
@@ -76,7 +82,9 @@ let imageRenderer = function () { // renders 3 images from NewImage.imageArray, 
     glob.usedImagesArray = tempArrayImages;
 }
 
-let handleClick = function (event) { // this handles the clicks of both the 3 images and tallying votes AND the click of the submission, which renders column, chart, and stores data locally
+// this handles the clicks of both the 3 images and tallying votes AND the click of the submission, which renders column, chart, and stores data locally
+
+let handleClick = function (event) { 
     let num = 25;
     const id = event.target.id;
 
@@ -108,7 +116,9 @@ let handleClick = function (event) { // this handles the clicks of both the 3 im
     imageRenderer();
 }
 
-let renderTotalsColumn = function () { // takes totals stored in each image object and renders them to left column on screen
+// takes totals stored in each image object and renders them to left column on screen
+
+let renderTotalsColumn = function () { 
     let index = 0;
 
     Product.productArray.forEach(element => {
@@ -124,16 +134,22 @@ let renderTotalsColumn = function () { // takes totals stored in each image obje
     })
 }
 
-let imageIsNewChecker = function (valueToCheck, cantBeThis, cantBeThisEither) { // checks image object to ensure it is 1) not one that was previously shown and 2) not one of the other images currently rendered
+
+// checks image object to ensure it is 1) not one that was previously shown and 2) not one of the other images currently rendered
+
+let imageIsNewChecker = function (valueToCheck, cantBeThis, cantBeThisEither) { 
     valueToCheck = randomizer();
 
     while (glob.usedImagesArray.includes(valueToCheck) || valueToCheck === cantBeThis || valueToCheck === cantBeThisEither) {
         valueToCheck = randomizer();
     }
     return valueToCheck;
+
 }
 
-let submitButtonHandle = function () { // simply packages all functions for the sumbit button into one event for the sumbit button eventHandler
+// simply packages all functions for the sumbit button into one event for the sumbit button eventHandler
+
+let submitButtonHandle = function () { 
     renderTotalsColumn();
     renderChart();
     storeData();
@@ -159,6 +175,9 @@ let renderChart = function () {
         const singleImageShown = image.timesShown;
         ImageShownArray.push(singleImageShown);
     }
+
+
+    // chart info , layout and build
 
     const ctx = document.getElementById('results-chart').getContext('2d');
     const imageChart = new Chart(ctx, {
@@ -203,8 +222,10 @@ let storeData = function () {
     localStorage.setItem('images', imageJSON);
 }
 
-let imageRecreater = function (imageJSON) { // renders images, specifically based off the data stored locally
+// renders images, specifically based off the data stored locally
 
+
+let imageRecreater = function (imageJSON) { 
     const rawImages = JSON.parse(imageJSON);
 
     rawImages.forEach(element => {
